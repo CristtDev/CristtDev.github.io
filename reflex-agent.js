@@ -23,14 +23,8 @@ function test(states) {
     var action_result = reflex_agent(location, state);
     document.getElementById("log").innerHTML += "<br><strong style='color: yellow;'>Location: ".concat(location).concat(" | Action: ").concat(action_result).concat("</strong>");
     if (action_result == "CLEAN") {
-        if (location == "A"){
-            states[1] = change_state();
-            states[0] = "B";
-        } 
-        else if (location == "B"){
-            states[2] = change_state();
-            states[0] = "A";
-        }
+        if (location == "A") states[1] = "CLEAN";
+        else if (location == "B") states[2] = "CLEAN";
     }
     else if (action_result == "RIGHT") {
         states[0] = "B";
