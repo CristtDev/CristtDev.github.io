@@ -33,6 +33,124 @@ section {
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5);
 }
 
+#newronal {
+    display: none;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
+}
+
+#newronal h2 a {
+    color: #61dafb;
+    text-decoration: none;
+}
+
+#newronal h3 {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    color: #cccccc;
+}
+
+#newronal input[type="number"] {
+    width: 100%;
+    max-width: 600px;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #444;
+    background-color: #333;
+    color: #ffffff;
+    font-size: 1em;
+}
+
+#newronal button#btnnncalcular {
+    background-color: #a25fd8;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 1em;
+}
+
+#newronal button#btnnncalcular:hover {
+    background-color: #8c4fb8;
+}
+
+#newronal p.bg-dark {
+    background-color: #333;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 10px;
+    text-align: center;
+    color: #e6e6e6;
+    font-size: 1.1em;
+}
+
+/* Contenedor para la tabla de previsualización y resultados */
+#previewTableContainerNew, #resultTableContainerNew {
+    max-height: 300px; /* Altura máxima para el contenedor */
+    max-width: 100%; /* Ancho máximo */
+    overflow-y: auto; /* Scroll vertical si sobrepasa la altura */
+    overflow-x: auto; /* Scroll horizontal si es necesario */
+    border: 1px solid #333;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+/* Estilos para tablas */
+#previewTableNew, #resultTableNew {
+    width: 100%; /* Asegura que la tabla ocupe todo el ancho disponible */
+    font-size: 14px;
+    color: #e0e0e0;
+}
+
+#previewTableNew thead th, #resultTableNew thead th {
+    position: sticky;
+    top: 0;
+    background-color: #333333; /* Fondo para el encabezado */
+    z-index: 1;
+    color: #ffffff;
+}
+
+#contLinealKm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+#previewTableNew tbody td, #resultTableNew tbody td {
+    padding: 10px;
+    text-align: center;
+    background-color: #2a2a2a; /* Fondo para las celdas de datos */
+}
+
+.table-striped tbody tr:nth-of-type(odd), .table-striped tbody tr:nth-of-type(even) {
+    background-color: #242424;
+}
+
+
+#newronal code#nnresultado {
+    font-family: monospace;
+    font-size: 1.1em;
+    color: #ff6f61;
+}
+
+#previewTableNew td {
+    background-color: black;
+}
+
+#resultTableNew td {
+    background-color: black;
+}
+
 #form-bayes {
     background-color: #000000;
     padding: 10px;
