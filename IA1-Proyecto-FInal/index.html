@@ -22,7 +22,6 @@
         <a href="#" onclick="mostrarVista('naive-bayes')">Naive Bayes</a>
         <a href="#" onclick="mostrarVista('newronal')">Neuronal Network</a>
         <a href="#" onclick="mostrarVista('seccionkmeans')">KMeans</a>
-        <a href="#">K-Nearest Neighbor</a>
     </div>
 
     <div id="header-container">
@@ -109,7 +108,8 @@
             <h2 class="text-success">Regresión Lineal</h2>
             <button onclick="entrenarModelo('lineal')" class="btn btn-success">Entrenar</button>
             <button onclick="realizarOperacion('lineal')" class="btn btn-secondary">Realizar Predicción</button>
-            <div id="graficaLineal" class="mt-3" style="width: 100%; height: 500px;"></div>
+            <button onclick="mostrarGrafica('lineal')" class="btn btn-primary">Mostrar Gráfica</button>
+            <div id="graficaLineal" class="mt-3" style="width: 100%; height: 500px; display: none;"></div>
         </section>
 
         <!-- Contenido de Regresión Polinomial -->
@@ -117,13 +117,14 @@
             <h2 class="text-warning">Regresión Polinomial</h2>
             <button onclick="entrenarModelo('polinomial')" class="btn btn-warning">Entrenar</button>
             <button onclick="realizarOperacion('polinomial')" class="btn btn-secondary">Realizar Predicción</button>
+            <button onclick="mostrarGrafica('polinomial')" class="btn btn-primary">Mostrar Gráfica</button>
             <div id="graficaPolinomial" class="mt-3" style="width: 100%; height: 500px;"></div>
         </section>
         <!-- Contenido de Decision Tree -->
-        <section id="decision-tree">
+        <section id="decision-tree" style="display: none;">
             <article class="box post post-excerpt">
                 <header>
-                    <h2 id="title-desiciontree">Generar Árbol de Decisión</h2>
+                    <h2 id="title-desiciontree-tree">Generar Árbol de Decisión</h2>
                     <p></p>
                 </header>
 
@@ -131,64 +132,75 @@
                     <!-- Cargar archivo CSV -->
                     <label>Seleccionar archivo CSV</label>
                     <br>
-                    <input type="file" id="fileInput" accept=".csv" />
+                    <input type="file" id="fileInput-tree" accept=".csv" />
+                    <br><br>
+
+                    <!-- Botón para cargar datos -->
+                    <button id="loadDataBtn-tree">Cargar datos</button>
                     <br><br>
 
                     <!-- Vista previa de datos -->
-                    <div id="preview" style="overflow: auto; max-height: 200px; max-width: 80%;"></div>
+                    <div id="preview-tree" style="overflow: auto; max-height: 200px; max-width: 80%; display: none;">
+                    </div>
                     <br>
 
                     <!-- Botones -->
-                    <button id="btngenerate">Generar árbol de decisión</button>
+                    <button id="btngenerate-tree">Generar árbol de decisión</button>
                     <br><br>
                     <label>Predicción</label>
                     <br>
-                    <input style="width: 80%;" id="data" type="text" placeholder="Insertar datos para predecir"
+                    <input style="width: 80%;" id="data-tree" type="text" placeholder="Insertar datos para predecir"
                         value="Medium,Short,No,Yes,No">
                     <br><br>
-                    <button id="predict">Predecir con datos insertados</button>
+                    <button id="predict-tree">Predecir con datos insertados</button>
                     <br><br>
-                    <p id="prediction" style="font-size: 20px;"></p>
+                    <p id="prediction-tree" style="font-size: 20px;"></p>
                 </center>
                 <br>
 
                 <h3 class="display-6 text-center mt-5">Resultado del árbol:<br /></h3>
                 <div class="container mb-5">
                     <div style="width: 100%; height: 500px; border: 2px solid rgb(96, 160, 255); border-radius: 10px;"
-                        id="treed"></div>
+                        id="treed-tree"></div>
                 </div>
 
                 <script type="text/javascript">
-                    let csvData = [];
+                    let csvDataTree = [];
 
                     // Función para cargar archivo CSV
-                    document.getElementById('fileInput').addEventListener('change', (event) => {
+                    document.getElementById('fileInput-tree').addEventListener('change', (event) => {
                         const file = event.target.files[0];
                         const reader = new FileReader();
 
                         reader.onload = (e) => {
                             const text = e.target.result;
-                            parseCSV(text);
+                            parseCSVTree(text);
+                            document.getElementById('loadDataBtn-tree').style.display = 'inline';
                         };
 
                         reader.readAsText(file);
                     });
 
                     // Función para parsear y mostrar vista previa del CSV
-                    function parseCSV(text) {
+                    function parseCSVTree(text) {
                         const rows = text.split('\n').map(row => row.split(','));
-                        csvData = rows;
-
-                        // Limitar filas y columnas para vista previa
-                        const previewRows = rows.slice(0, 10);
-                        const previewCols = previewRows.map(row => row.slice(0, 6));
-
-                        displayPreview(previewCols);
+                        csvDataTree = rows;
                     }
 
+                    document.getElementById('loadDataBtn-tree').addEventListener('click', () => {
+                        if (csvDataTree.length > 0) {
+                            const previewRows = csvDataTree.slice(0, 10);
+                            const previewCols = previewRows.map(row => row.slice(0, 6));
+                            displayPreviewTree(previewCols);
+                            document.getElementById('preview-tree').style.display = 'block';
+                        } else {
+                            alert('No hay datos cargados. Por favor, cargue un archivo CSV.');
+                        }
+                    });
+
                     // Mostrar vista previa en un div
-                    function displayPreview(data) {
-                        const previewDiv = document.getElementById('preview');
+                    function displayPreviewTree(data) {
+                        const previewDiv = document.getElementById('preview-tree');
                         let tableHTML = '<table border="1" style="width: 100%; border-collapse: collapse;">';
 
                         data.forEach(row => {
@@ -204,16 +216,16 @@
                     }
 
                     // Función para generar el árbol de decisión
-                    generatechart = () => {
-                        let arrHeader = csvData[0];
-                        let arrData = csvData.slice(1);
+                    function generatechartTree() {
+                        let arrHeader = csvDataTree[0];
+                        let arrData = csvDataTree.slice(1);
 
                         let dtSt = [arrHeader, ...arrData];
 
                         let dTree = new DecisionTreeID3(dtSt);
                         let root = dTree.train(dTree.dataset);
 
-                        const pred = document.getElementById('data').value;
+                        const pred = document.getElementById('data-tree').value;
                         const arrPred = pred.split(",");
                         const predHeader = arrHeader.slice(0, arrHeader.length - 1);
 
@@ -224,15 +236,15 @@
                         };
                     }
 
-                    document.getElementById('predict').onclick = function () {
-                        var chart = document.getElementById("treed");
-                        var { dotStr, predictNode } = generatechart();
+                    document.getElementById('predict-tree').onclick = function () {
+                        var chart = document.getElementById("treed-tree");
+                        var { dotStr, predictNode } = generatechartTree();
 
                         if (predictNode != null) {
-                            const arrHeader = csvData[0];
-                            document.getElementById('prediction').innerText = arrHeader[arrHeader.length - 1] + ": " + predictNode.value;
+                            const arrHeader = csvDataTree[0];
+                            document.getElementById('prediction-tree').innerText = arrHeader[arrHeader.length - 1] + ": " + predictNode.value;
                         } else {
-                            document.getElementById('prediction').innerText = "";
+                            document.getElementById('prediction-tree').innerText = "";
                         }
 
                         const parsDot = vis.network.convertDot(dotStr);
@@ -251,19 +263,18 @@
                                 }
                             }
                         };
-                        console.log(chart, data, options);
                         var network = new vis.Network(chart, data, options);
                     }
 
-                    document.getElementById('btngenerate').onclick = function () {
-                        var chart = document.getElementById("treed");
-                        var { dotStr, predictNode } = generatechart();
+                    document.getElementById('btngenerate-tree').onclick = function () {
+                        var chart = document.getElementById("treed-tree");
+                        var { dotStr, predictNode } = generatechartTree();
 
                         if (predictNode != null) {
-                            const arrHeader = csvData[0];
-                            document.getElementById('prediction').innerText = arrHeader[arrHeader.length - 1] + ": " + predictNode.value;
+                            const arrHeader = csvDataTree[0];
+                            document.getElementById('prediction-tree').innerText = arrHeader[arrHeader.length - 1] + ": " + predictNode.value;
                         } else {
-                            document.getElementById('prediction').innerText = "";
+                            document.getElementById('prediction-tree').innerText = "";
                         }
 
                         const parsDot = vis.network.convertDot(dotStr);
@@ -290,8 +301,10 @@
         </section>
 
 
+
+
         <!-- Contenido de Naive Bayes -->
-        <section id="naive-bayes">
+        <section id="naive-bayes" style="display: none;">
             <article class="box post post-excerpt">
                 <header>
                     <h2><a href="#">Naive Bayes</a></h2>
@@ -304,28 +317,28 @@
                             <div class="col" style="align-content: center;">
                                 <div class="shadow-lg p-3 mb-6 rounded" style="align-content: center;">
                                     <h3 style="margin-left: 5em;">Cargar datos desde CSV:</h3>
-                                    <input type="file" id="fileInputBayes" accept=".csv" />
-                                    <button id="loadDataBtn" style="margin-top: 1em;">Cargar datos</button>
+                                    <input type="file" id="fileInputBayes-bayes" accept=".csv" />
+                                    <button id="loadDataBtn-bayes" style="margin-top: 1em;">Cargar datos</button>
                                     <br><br>
                                     <h3>Tabla de valores anteriores:</h3>
-                                    <table id="tablaBayes" class="table table-primary"></table>
+                                    <table id="tablaBayes-bayes" class="table table-primary"></table>
                                 </div>
                             </div>
 
                             <!-- Inputs dinámicos y cálculo -->
                             <div class="col">
                                 <div class="shadow-lg p-3 mb-5 rounded">
-                                    <div class="card" id="selectContainer">
+                                    <div class="card" id="selectContainer-bayes">
                                         <h3>Seleccione columnas y valores:</h3>
                                         <div>
-                                            <select id="columnSelect">
+                                            <select id="columnSelect-bayes">
                                                 <option value="">Seleccione una columna</option>
                                             </select>
-                                            <button id="addInputBtn">Agregar columna</button>
+                                            <button id="addInputBtn-bayes">Agregar columna</button>
                                         </div>
-                                        <div id="dynamic-inputs"></div>
+                                        <div id="dynamic-inputs-bayes"></div>
                                         <button style="margin-left: 5em; margin-top: 1em; max-width: 150px;"
-                                            id="btn">Calcular predicción</button>
+                                            id="btn-bayes">Calcular predicción</button>
                                     </div>
                                 </div>
                             </div>
@@ -334,7 +347,7 @@
                             <div>
                                 <div class="shadow-lg p-3 mb-5 rounded">
                                     <h3>Respuesta:</h3>
-                                    <table id="tablaRes" class="table table-Primary"></table>
+                                    <table id="tablaRes-bayes" class="table table-Primary"></table>
                                 </div>
                             </div>
                         </div>
@@ -342,14 +355,14 @@
                 </div>
 
                 <script>
-                    let datos = []; // Arreglo para almacenar los datos del CSV
-                    let columnNames = []; // Nombres de las columnas
-                    const selectedInputs = {}; // Para almacenar los valores seleccionados
-                    let datosEnviar = [];
+                    let datosBayes = []; // Arreglo para almacenar los datos del CSV
+                    let columnNamesBayes = []; // Nombres de las columnas
+                    const selectedInputsBayes = {}; // Para almacenar los valores seleccionados
+                    let datosEnviarBayes = [];
 
                     // Evento al cargar el archivo CSV
-                    document.getElementById('loadDataBtn').addEventListener('click', () => {
-                        const fileInput = document.getElementById('fileInputBayes');
+                    document.getElementById('loadDataBtn-bayes').addEventListener('click', () => {
+                        const fileInput = document.getElementById('fileInputBayes-bayes');
                         const file = fileInput.files[0];
 
                         if (!file) {
@@ -360,38 +373,38 @@
                         const reader = new FileReader();
                         reader.onload = (e) => {
                             const text = e.target.result;
-                            parseCSV(text);
+                            parseCSVBayes(text);
                         };
 
                         reader.readAsText(file);
                     });
 
                     // Función para parsear el archivo CSV
-                    function parseCSV(text) {
+                    function parseCSVBayes(text) {
                         const rows = text.split('\n').map(row => row.split(','));
-                        columnNames = rows[0];
-                        datosEnviar = rows.slice(1).map(row => {
+                        columnNamesBayes = rows[0];
+                        datosEnviarBayes = rows.slice(1).map(row => {
                             return [
                                 row[0].trim(), // Primer valor como string
                                 row.slice(1, -1).map(value => parseFloat(value)), // Valores intermedios como array de números
                                 row[row.length - 1].trim() // Último valor como string para la clase
                             ];
                         });
-                        datos = rows.slice(1).map(row => {
+                        datosBayes = rows.slice(1).map(row => {
                             const rowData = row.map((value, index) => index === row.length - 1 ? value.trim() : parseFloat(value));
                             return rowData;
                         });
-                        generateTable();
-                        populateColumnSelect();
+                        generateTableBayes();
+                        populateColumnSelectBayes();
                     }
 
                     // Generar tabla de valores anteriores
-                    function generateTable() {
+                    function generateTableBayes() {
                         let content = `<thead><tr>`;
-                        columnNames.forEach(name => content += `<th>${name}</th>`);
+                        columnNamesBayes.forEach(name => content += `<th>${name}</th>`);
                         content += `</tr></thead><tbody>`;
 
-                        datos.forEach((fila) => {
+                        datosBayes.forEach((fila) => {
                             content += `<tr>`;
                             fila.forEach(value => {
                                 if (typeof value === "number" && !isNaN(value)) {
@@ -404,14 +417,14 @@
                         });
 
                         content += `</tbody>`;
-                        document.getElementById("tablaBayes").innerHTML = content;
+                        document.getElementById("tablaBayes-bayes").innerHTML = content;
                     }
 
                     // Llenar el select con los nombres de columnas
-                    function populateColumnSelect() {
-                        const select = document.getElementById("columnSelect");
+                    function populateColumnSelectBayes() {
+                        const select = document.getElementById("columnSelect-bayes");
                         select.innerHTML = `<option value="">Seleccione una columna</option>`;
-                        columnNames.slice(0, -1).forEach(name => {
+                        columnNamesBayes.slice(0, -1).forEach(name => {
                             const option = document.createElement("option");
                             option.value = name;
                             option.textContent = name;
@@ -420,9 +433,9 @@
                     }
 
                     // Agregar input basado en la columna seleccionada
-                    document.getElementById("addInputBtn").addEventListener("click", () => {
-                        const selectedColumn = document.getElementById("columnSelect").value;
-                        if (selectedColumn && !selectedInputs[selectedColumn]) {
+                    document.getElementById("addInputBtn-bayes").addEventListener("click", () => {
+                        const selectedColumn = document.getElementById("columnSelect-bayes").value;
+                        if (selectedColumn && !selectedInputsBayes[selectedColumn]) {
                             const label = document.createElement("label");
                             label.textContent = `Valor para ${selectedColumn}:`;
                             label.style.marginRight = "10px";
@@ -436,29 +449,29 @@
                             input.className = "prediction-input";
                             input.setAttribute("data-column", selectedColumn);
 
-                            const inputContainer = document.getElementById("dynamic-inputs");
+                            const inputContainer = document.getElementById("dynamic-inputs-bayes");
                             inputContainer.appendChild(label);
                             inputContainer.appendChild(input);
                             inputContainer.appendChild(document.createElement("br"));
 
-                            selectedInputs[selectedColumn] = input; // Guardar el input en el objeto
+                            selectedInputsBayes[selectedColumn] = input; // Guardar el input en el objeto
                         }
                     });
 
                     // Calcular predicción usando la función de predicción proporcionada
-                    document.getElementById('btn').onclick = function (event) {
+                    document.getElementById('btn-bayes').onclick = function (event) {
                         event.preventDefault();
 
                         // Obtener valores ingresados en los inputs dinámicos
                         const inputValues = [];
-                        Object.values(selectedInputs).forEach(input => {
+                        Object.values(selectedInputsBayes).forEach(input => {
                             const value = parseFloat(input.value);
                             if (!isNaN(value)) {
                                 inputValues.push(Number(value));
                             }
                         });
 
-                        if (inputValues.length < Object.keys(selectedInputs).length) {
+                        if (inputValues.length < Object.keys(selectedInputsBayes).length) {
                             alert("Por favor, ingrese todos los valores requeridos.");
                             return;
                         }
@@ -466,22 +479,25 @@
                         console.log("asdfadfa-----", newIndividuo);
 
                         // Llamada a la función de predicción de Tytus
-                        let Manhattan = predecirCluster(1, datosEnviar, newIndividuo);
-                        let Euclidiana = predecirCluster(2, datosEnviar, newIndividuo);
+                        let Manhattan = predecirCluster(1, datosEnviarBayes, newIndividuo);
+                        let Euclidiana = predecirCluster(2, datosEnviarBayes, newIndividuo);
                         let content2 = `<thead>
-												<tr>
-													<th>Manhattan</th>
-													<th>Euclidiana</th>
-												</tr>
-												</thead>
-												<tbody>`;
+                                                    <tr>
+                                                        <th>Manhattan</th>
+                                                        <th>Euclidiana</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>`;
                         content2 += "  <tr><td scope=\"row\">" + Manhattan + "</td> <td> " + Euclidiana + " </td> </tr>";
 
-                        document.getElementById("tablaRes").innerHTML = content2;
+                        document.getElementById("tablaRes-bayes").innerHTML = content2;
                     };
                 </script>
             </article>
         </section>
+
+
+
         <section id="newronal" style="display: none;">
             <article class="box post post-excerpt">
                 <header>
@@ -645,7 +661,7 @@
 
 
 
-        <section id="seccionkmeans">
+        <section id="seccionkmeans" style="display: none;">
             <article class="box post post-excerpt">
                 <header>
                     <h2><a href="#">KMeans</a></h2>
@@ -771,6 +787,7 @@
                         var iterations = document.getElementById('iterations2D').value;
                         var data = [];
                         var split = linear_data.replaceAll(/\s/g, '').replaceAll('[', '').split('],');
+                        console.log("-- sp -- ", split);
 
                         split.forEach(d => {
                             var point = d.replace(']', '').split(',');
@@ -830,6 +847,7 @@
     </div>
     <script>
         let modelo = {};
+        let prediccionResultado = [];
         // Función para mostrar y ocultar vistas según el modelo seleccionado
         function mostrarVista(vistaId) {
             document.getElementById('lineal').style.display = 'none';
@@ -841,6 +859,8 @@
             document.getElementById('naive-bayes').style.display = 'none';
             document.getElementById('newronal').style.display = 'none';
             document.getElementById('seccionkmeans').style.display = 'none';
+            document.getElementById('datosCargados').style.display = 'none';
+            document.getElementById('seleccionColumnas').style.display = 'none';
 
             if (vistaId === 'lineal') {
                 if (document.getElementById(vistaId)) {
@@ -954,7 +974,8 @@
                     : modelo.variablesEntrada;
 
                 yPred = modelo.entrenado.predict(xValores);
-                dibujarGrafica(tipo === 'lineal' ? 'graficaLineal' : 'graficaPolinomial', modelo.variablesEntrada, modelo.variableSalida, yPred, tipo === 'lineal' ? 'Regresión Lineal' : 'Regresión Polinomial');
+                prediccionResultado = yPred; // Guardar predicción
+                alert('Predicción realizada. Ahora puedes mostrar la gráfica.');
             } else if (tipo === 'decisionTree') {
                 const xValores = modelo.variablesEntrada;
                 yPred = modelo.entrenado.predict(xValores);
@@ -963,6 +984,22 @@
                 const xValores = modelo.variablesEntrada;
                 yPred = modelo.entrenado.predict(xValores);
                 document.getElementById('resultadoNaiveBayes').innerHTML = `Predicción: ${yPred}`;
+            }
+        }
+
+        function mostrarGrafica(tipo) {
+            if (prediccionResultado.length === 0) {
+                alert('Primero realiza una predicción.');
+                return;
+            }
+
+            if (tipo === 'lineal' || tipo === 'polinomial') {
+                dibujarGrafica(tipo === 'lineal' ? 'graficaLineal' : 'graficaPolinomial',
+                    modelo.variablesEntrada,
+                    modelo.variableSalida,
+                    prediccionResultado,
+                    tipo === 'lineal' ? 'Regresión Lineal' : 'Regresión Polinomial');
+                document.getElementById(tipo === 'lineal' ? 'graficaLineal' : 'graficaPolinomial').style.display = 'block';
             }
         }
 

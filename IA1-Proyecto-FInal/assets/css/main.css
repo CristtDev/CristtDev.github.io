@@ -151,16 +151,24 @@ section {
     background-color: black;
 }
 
-#form-bayes {
+#selectContainer-bayes {
+    background-color: black;
+}
+
+#tablaDatos td {
+    color: white;
+}
+
+#form-bayes-bayes {
     background-color: #000000;
     padding: 10px;
 }
 
-#tablaBayes td {
+#tablaBayes-bayes td {
     background-color: black;
 }
 
-#tablaRes td {
+#tablaRes-bayes td {
     background-color: black;
 }
 
