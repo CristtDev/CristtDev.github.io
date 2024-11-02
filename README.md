@@ -2,12 +2,14 @@
 
 ### PROYECTO FINAL  - Machine Learning
 
-[Reflex Agents](https://cristtdev.github.io/reflex-agent.html "Pagina y agentes inteligentes").
+[Machine Learning](https://cristtdev.github.io/IA1-Proyecto-FInal/index.html "Pagina y agentes inteligentes").
+
 
 
 ### Tarea 1  - Agentes Inteligentes
 
-[Reflex Agents](https://cristtdev.github.io/IA1-Proyecto-FInal/index.html "Pagina y agentes inteligentes").
+[Reflex Agents](https://cristtdev.github.io/reflex-agent.html "Pagina y agentes inteligentes").
+
 
 ---
 
